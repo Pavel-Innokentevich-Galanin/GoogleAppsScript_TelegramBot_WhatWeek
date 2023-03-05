@@ -459,9 +459,23 @@ function getMonthArray(year, month) {
   const array = DateController.getMonthDays(year, month);
   let monthArray = [[]];
 
+  const d = new Date();
+  const ye = d.getFullYear();
+  const mo = d.getMonth() + 1;
+  const da = d.getDate();
+  const currentDate = new Date(`${ye}-${mo}-${da} 12:00`);
+
   let rowNumber = 0;
   let count = 0;
   array.forEach((el) => {
+    const d = new Date(el.date);
+    const ye = d.getFullYear();
+    const mo = d.getMonth() + 1;
+    const da = d.getDate();
+    const secondDate = new Date(`${ye}-${mo}-${da} 12:00`);
+
+    el.currentDay = currentDate.getTime() === secondDate.getTime();
+
     el.type = DateController.getWeekType(new Date(el.date).toJSON());
 
     count += 1;
@@ -532,17 +546,7 @@ function printMonth(year, month) {
       let date = d.getDate();
       date = date < 10 ? `0${date}` : `${date}`;
 
-      switch (j.type) {
-        case 'up':
-          text += `${date}|`;
-          break;
-        case 'down':
-          text += `${date}|`;
-          break;
-        default:
-          text += `${date}|`;
-          break;
-      }
+      text += j.currentDay ? `${date}*` : `${date}|`;
     });
     text += '\n';
   });
@@ -782,7 +786,7 @@ function isWhatweekCommand(chat_id, text, message_id) {
 
     const d = new Date();
     const ye = d.getFullYear();
-    const mo = d.getMonth();
+    const mo = d.getMonth() + 1;
     let answer = '';
 
     answer += `${printTime()} \n\n`;
