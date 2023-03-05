@@ -25,7 +25,7 @@ function myFunction() {
     setHook();
     setCommands();
   } catch (err) {
-    myLog(err, "myFunction");
+    myLog(err, 'myFunction');
   }
 }
 
@@ -35,19 +35,19 @@ function myFunction() {
  */
 function getEnv() {
   const env = {};
-  const envFile = HtmlService.createHtmlOutputFromFile("env.html").getContent();
-  const lines = envFile.split("\n");
+  const envFile = HtmlService.createHtmlOutputFromFile('env.html').getContent();
+  const lines = envFile.split('\n');
 
   lines.forEach((el) => {
     if (el.length == 0) return;
 
-    const myRe = new RegExp(".*=.*", "g");
+    const myRe = new RegExp('.*=.*', 'g');
     const [result] = myRe.exec(el);
 
     if (!result) return;
 
-    const key = result.split("=")[0];
-    const value = result.split("=")[1];
+    const key = result.split('=')[0];
+    const value = result.split('=')[1];
 
     env[key] = value;
   });
@@ -61,10 +61,10 @@ function getEnv() {
  */
 function doGet(e = {}) {
   try {
-    saveToGoogleTable("GET_logs", [new Date(), JSON.stringify(e, null, 2)]);
+    saveToGoogleTable('GET_logs', [new Date(), JSON.stringify(e, null, 2)]);
 
     const data = {
-      message: "Приложение работает",
+      message: 'Приложение работает',
       more: {
         data: e,
       },
@@ -74,7 +74,7 @@ function doGet(e = {}) {
       ContentService.MimeType.JSON
     );
   } catch (err) {
-    myLog(err, "doGet");
+    myLog(err, 'doGet');
   }
 }
 
@@ -84,10 +84,10 @@ function doGet(e = {}) {
  */
 function doPost(e = {}) {
   try {
-    saveToGoogleTable("POST_logs", [new Date(), JSON.stringify(e, null, 2)]);
+    saveToGoogleTable('POST_logs', [new Date(), JSON.stringify(e, null, 2)]);
 
     if (!e.postData?.contents) {
-      throw new Error("нет тела запроса у POST");
+      throw new Error('нет тела запроса у POST');
     }
 
     const data = JSON.parse(e.postData?.contents);
@@ -101,7 +101,7 @@ function doPost(e = {}) {
     const userLastName = user.getUserLastName();
     const userUsername = user.getUserUsername();
 
-    saveToGoogleTable("messages", [
+    saveToGoogleTable('messages', [
       new Date(),
       chatId,
       userUsername,
@@ -117,21 +117,21 @@ function doPost(e = {}) {
     if (isGetcalendarCommand(chatId, text, message_id)) return;
     if (isAboutCommand(chatId, text, message_id)) return;
 
-    let answer = "";
-    answer += "Я цябе не разумею. \n\n";
-    answer += "Паспрабуй каманду /help \n\n";
-    answer += "<b>Дадзеныя, якія дашлі на Google Apps Script</b>: \n";
+    let answer = '';
+    answer += 'Я цябе не разумею. \n\n';
+    answer += 'Паспрабуй каманду /help \n\n';
+    answer += '<b>Дадзеныя, якія дашлі на Google Apps Script</b>: \n';
     answer += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
 
     const params = {
       reply_to_message_id: message_id,
       disable_web_page_preview: true,
-      parse_mode: "HTML",
+      parse_mode: 'HTML',
     };
 
     sendMessage(chatId, answer, params);
   } catch (err) {
-    myLog(err, "doPost");
+    myLog(err, 'doPost');
   }
 }
 
@@ -197,14 +197,14 @@ function sendMessage(chat_id, text, params = {}) {
     };
 
     const options = {
-      method: "post",
-      contentType: "application/json",
+      method: 'post',
+      contentType: 'application/json',
       payload: JSON.stringify(data),
     };
 
     UrlFetchApp.fetch(url, options);
   } catch (err) {
-    myLog(err, "sendMessage");
+    myLog(err, 'sendMessage');
   }
 }
 
@@ -259,18 +259,18 @@ class DateController {
 
   static getStringMonth(month) {
     const ru = [
-      "студзень (январь)",
-      "люты (февраль)",
-      "сакавік (март)",
-      "красавік (апрель)",
-      "травень (май)",
-      "чэрвень (июнь)",
-      "ліпень (июль)",
-      "жнівень (август)",
-      "верасень (сентябрь)",
-      "кастрычнік (октябрь)",
-      "лістапад (ноябрь)",
-      "снежань (декабрь)",
+      'студзень (январь)',
+      'люты (февраль)',
+      'сакавік (март)',
+      'красавік (апрель)',
+      'травень (май)',
+      'чэрвень (июнь)',
+      'ліпень (июль)',
+      'жнівень (август)',
+      'верасень (сентябрь)',
+      'кастрычнік (октябрь)',
+      'лістапад (ноябрь)',
+      'снежань (декабрь)',
     ];
     return ru[month - 1];
   }
@@ -300,7 +300,7 @@ class DateController {
     try {
       let d = new Date(string_date);
 
-      if (d === "Invalid Date") {
+      if (d === 'Invalid Date') {
         d = new Date();
       }
 
@@ -309,7 +309,7 @@ class DateController {
       let mounth = d.getMonth() + 1; // Определяем номер месяца
 
       if (mounth === 7 || mounth === 8) {
-        return "none";
+        return 'none';
       }
 
       if (mounth >= 1 && mounth <= 8) {
@@ -340,16 +340,16 @@ class DateController {
 
       let type = DateController.getWeekIndex(weeks, d1); // Вызываю функцию, которая определяет номер недели
       if (type === -1) {
-        return "-1";
+        return '-1';
       }
 
       if (type % 2 === 0) {
-        return "up";
+        return 'up';
       } else {
-        return "down";
+        return 'down';
       }
     } catch (e) {
-      return "" + e;
+      return '' + e;
     }
   }
 
@@ -503,21 +503,21 @@ function getMonthArray(year, month) {
  */
 function printMonth(year, month) {
   const qq = getMonthArray(year, month);
-  let text = "";
+  let text = '';
   text += `Год    : ${year} \n`;
   text += `Месяц  : ${DateController.getStringMonth(month)} \n`;
-  text += "\n";
-  text += "Тыдзень Пн Аў Ср Чц Пт Сб Нд \n";
+  text += '\n';
+  text += 'Тыдзень Пн Аў Ср Чц Пт Сб Нд \n';
   qq.forEach((i) => {
     const d = new Date(i[0].date);
     let date = d.getDate();
     date = date < 10 ? `0${date}` : `${date}`;
 
     switch (i[6].type) {
-      case "up":
+      case 'up':
         text += `верхні |`;
         break;
-      case "down":
+      case 'down':
         text += `ніжні  |`;
         break;
       default:
@@ -531,10 +531,10 @@ function printMonth(year, month) {
       date = date < 10 ? `0${date}` : `${date}`;
 
       switch (j.type) {
-        case "up":
+        case 'up':
           text += `${date}|`;
           break;
-        case "down":
+        case 'down':
           text += `${date}|`;
           break;
         default:
@@ -542,7 +542,7 @@ function printMonth(year, month) {
           break;
       }
     });
-    text += "\n";
+    text += '\n';
   });
 
   return text;
@@ -593,7 +593,7 @@ function printYearCalendar(d = new Date()) {
     nextYear = DateController.getNextYear(ye);
   }
 
-  let text = "";
+  let text = '';
   text += `<b>${prevYear}-${nextYear} навучальны год</b> \n\n`;
   text += `${printMonth(prevYear, 09)} \n`;
   text += `${printMonth(prevYear, 10)} \n`;
@@ -626,7 +626,7 @@ function saveToGoogleTable(sheet, array) {
  * @param func - функция от которой пришло сообщение
  */
 function myLog(message, func) {
-  saveToGoogleTable("logs", [new Date(), `${message}`, func]);
+  saveToGoogleTable('logs', [new Date(), `${message}`, func]);
 }
 
 /**
@@ -642,14 +642,14 @@ function setHook() {
     };
 
     const options = {
-      method: "post",
-      contentType: "application/json",
+      method: 'post',
+      contentType: 'application/json',
       payload: JSON.stringify(data),
     };
 
     UrlFetchApp.fetch(url, options);
   } catch (err) {
-    myLog(err, "setHook");
+    myLog(err, 'setHook');
   }
 }
 
@@ -668,24 +668,24 @@ function setHook() {
 function getCommands() {
   return [
     {
-      command: "/start",
-      description: "Старт бота",
+      command: '/start',
+      description: 'Старт бота',
     },
     {
-      command: "/help",
-      description: "Спіс каманд",
+      command: '/help',
+      description: 'Спіс каманд',
     },
     {
-      command: "/whatweek",
-      description: "Верхні ці ніжні тыдзень?",
+      command: '/whatweek',
+      description: 'Верхні ці ніжні тыдзень?',
     },
     {
-      command: "/getcalendar",
-      description: "Каляндар на навучальны год",
+      command: '/getcalendar',
+      description: 'Каляндар на навучальны год',
     },
     {
-      command: "/about",
-      description: "Пра праграміста",
+      command: '/about',
+      description: 'Пра праграміста',
     },
   ];
 }
@@ -703,11 +703,11 @@ function getCommands() {
  */
 function getTextCommands() {
   const commands = getCommands();
-  let text = "";
+  let text = '';
   commands.forEach((el) => {
     text += `${el.command} \n`;
     text += ` - ${el.description} \n`;
-    text += "\n";
+    text += '\n';
   });
   return text;
 }
@@ -724,37 +724,37 @@ function setCommands() {
     };
 
     const options = {
-      method: "post",
-      contentType: "application/json",
+      method: 'post',
+      contentType: 'application/json',
       payload: JSON.stringify(data),
     };
 
     UrlFetchApp.fetch(url, options);
   } catch (err) {
-    myLog(err, "setCommands");
+    myLog(err, 'setCommands');
   }
 }
 
 function isStartCommand(chat_id, text, message_id) {
   try {
-    if (text !== "/start") return false;
+    if (text !== '/start') return false;
 
-    let answer = "";
-    answer += "Сардэчна запрашаем у чат! \n\n";
-    answer += "Спіс каманд:\n\n";
+    let answer = '';
+    answer += 'Сардэчна запрашаем у чат! \n\n';
+    answer += 'Спіс каманд:\n\n';
     answer += getTextCommands();
 
     sendMessage(chat_id, answer, { reply_to_message_id: message_id });
 
     return true;
   } catch (err) {
-    myLog(err, "isStartCommand");
+    myLog(err, 'isStartCommand');
   }
 }
 
 function isHelpCommand(chat_id, text, message_id) {
   try {
-    if (text !== "/help") return false;
+    if (text !== '/help') return false;
 
     let answer = getTextCommands();
 
@@ -762,18 +762,18 @@ function isHelpCommand(chat_id, text, message_id) {
 
     return true;
   } catch (err) {
-    myLog(err, "isHelpCommand");
+    myLog(err, 'isHelpCommand');
   }
 }
 
 function isWhatweekCommand(chat_id, text, message_id) {
   try {
-    if (text !== "/whatweek") return false;
+    if (text !== '/whatweek') return false;
 
     const d = new Date();
     const ye = d.getFullYear();
     const mo = d.getMonth();
-    let answer = "";
+    let answer = '';
 
     answer += `${printTime()} \n\n`;
     answer += `<pre>${printMonth(ye, mo)}</pre>`;
@@ -781,36 +781,36 @@ function isWhatweekCommand(chat_id, text, message_id) {
     sendMessage(chat_id, answer, {
       reply_to_message_id: message_id,
       disable_web_page_preview: true,
-      parse_mode: "HTML",
+      parse_mode: 'HTML',
     });
 
     return true;
   } catch (err) {
-    myLog(err, "isWhatweekCommand");
+    myLog(err, 'isWhatweekCommand');
   }
 }
 
 function isGetcalendarCommand(chat_id, text, message_id) {
   try {
-    if (text !== "/getcalendar") return false;
+    if (text !== '/getcalendar') return false;
 
     let answer = `<pre>${printYearCalendar()}</pre>`;
 
     sendMessage(chat_id, answer, {
       reply_to_message_id: message_id,
       disable_web_page_preview: true,
-      parse_mode: "HTML",
+      parse_mode: 'HTML',
     });
 
     return true;
   } catch (err) {
-    myLog(err, "isGetcalendarCommand");
+    myLog(err, 'isGetcalendarCommand');
   }
 }
 
 function isAboutCommand(chat_id, text, message_id) {
   try {
-    if (text !== "/about") return false;
+    if (text !== '/about') return false;
 
     let answer = `
 Студэнт
@@ -826,12 +826,12 @@ https://github.com/BrSTU-PO4-190333
     sendMessage(chat_id, answer, {
       reply_to_message_id: message_id,
       disable_web_page_preview: true,
-      parse_mode: "HTML",
+      parse_mode: 'HTML',
     });
 
     return true;
   } catch (err) {
-    myLog(err, "isAboutCommand");
+    myLog(err, 'isAboutCommand');
   }
 }
 
