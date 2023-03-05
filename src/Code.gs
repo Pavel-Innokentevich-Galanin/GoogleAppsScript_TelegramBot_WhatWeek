@@ -115,6 +115,8 @@ function doPost(e = {}) {
     if (isHelpCommand(chatId, text, message_id)) return;
     if (isWhatweekCommand(chatId, text, message_id)) return;
     if (isGetcalendarCommand(chatId, text, message_id)) return;
+    if (isRspfeisCommand(chatId, text, message_id)) return;
+    if (isExamfeisCommand(chatId, text, message_id)) return;
     if (isAboutCommand(chatId, text, message_id)) return;
 
     let answer = '';
@@ -684,6 +686,14 @@ function getCommands() {
       description: 'Каляндар на навучальны год',
     },
     {
+      command: '/rspfeis',
+      description: 'Расклад заняткаў факультата ЭІС',
+    },
+    {
+      command: '/examfeis',
+      description: 'Расклад экзаменаў факультата ЭІС',
+    },
+    {
       command: '/about',
       description: 'Пра праграміста',
     },
@@ -805,6 +815,46 @@ function isGetcalendarCommand(chat_id, text, message_id) {
     return true;
   } catch (err) {
     myLog(err, 'isGetcalendarCommand');
+  }
+}
+
+function isRspfeisCommand(chat_id, text, message_id) {
+  try {
+    if (text !== '/rspfeis') return false;
+
+    let answer = '';
+    answer += 'Расклад заняткаў факультата ЭІС: \n';
+    answer += `https://bstu.by/obrazovanie/fakultety/feis/raspisanie-zanyatij`;
+
+    sendMessage(chat_id, answer, {
+      reply_to_message_id: message_id,
+      disable_web_page_preview: true,
+      parse_mode: 'HTML',
+    });
+
+    return true;
+  } catch (err) {
+    myLog(err, 'isRspfeisCommand');
+  }
+}
+
+function isExamfeisCommand(chat_id, text, message_id) {
+  try {
+    if (text !== '/examfeis') return false;
+
+    let answer = '';
+    answer += 'Расклад экзаменаў факультата ЭІС: \n';
+    answer += `https://bstu.by/obrazovanie/fakultety/feis/raspisanie-ekzamenov`;
+
+    sendMessage(chat_id, answer, {
+      reply_to_message_id: message_id,
+      disable_web_page_preview: true,
+      parse_mode: 'HTML',
+    });
+
+    return true;
+  } catch (err) {
+    myLog(err, 'isExamfeisCommand');
   }
 }
 
